@@ -54,6 +54,10 @@ public class Main {
                 for (int i=0; i < n1.getLength(); i++) {
                     Element entry = (Element) n1.item(i);
                     Element title = (Element) entry.getElementsByTagName("title").item(0);
+                    Element geo = (Element) entry.getElementsByTagName("georss:point").item(0);
+                    Element when = (Element) entry.getElementsByTagName("updated").item(0);
+                    Element link = (Element) entry.getElementsByTagName("link").item(0);
+                    String details = title.getFirstChild().getNodeValue();
                 }
             }
             
