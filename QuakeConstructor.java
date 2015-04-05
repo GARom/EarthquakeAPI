@@ -24,23 +24,23 @@ public class QuakeConstructor {
     }
     
     public Date getDate() {
-        return this.date;
+        return date;
     }
     
     public String getDetails() {
-        return this.details;
+        return details;
     }
     
     public String getLocation() {
-        return this.location;
+        return location;
     }
             
     public double getMagnitude() {
-        return this.magnitude;
+        return magnitude;
     }
     
     public String getLink() {
-        return this.link;
+        return link;
     }
     
 }

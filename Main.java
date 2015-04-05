@@ -8,6 +8,9 @@ import java.net.MalformedURLException;
 import java.net.HttpURLConnection;
 import java.io.InputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -26,9 +29,9 @@ public class Main {
         
         System.out.println("Today's Earthquakes 2.5 and Higher");
         SimpleDateFormat df = new SimpleDateFormat("HH:MM");
-        System.out.printf("%s\t%-20s\t%s\t%s\n", "WHEN", "LAT / LONG", "MAGNITUDE", "DETAILS");
+        System.out.printf("%s\t%-25s\t%s\t%s\n", "WHEN", "LAT / LONG", "MAGNITUDE", "DETAILS");
         for (QuakeConstructor q : earthquakes) {
-            System.out.printf("%s\t%-20s\t%f\t%s\n", df.format(q.getDate()), q.getLocation(), q.getMagnitude(), q.getDetails() );
+            System.out.printf("%s\t%-25s\t%2.2f\t%s\n", df.format(q.getDate()), q.getLocation(), q.getMagnitude(), q.getDetails() );
         }
         
     }
@@ -58,6 +61,26 @@ public class Main {
                     Element when = (Element) entry.getElementsByTagName("updated").item(0);
                     Element link = (Element) entry.getElementsByTagName("link").item(0);
                     String details = title.getFirstChild().getNodeValue();
+                    String hostname = "http://earthquake.usgs.gov";
+                    String linkString = hostname + link.getAttribute("href");
+                    
+                    String point = geo.getFirstChild().getNodeValue();
+                    String dt = when.getFirstChild().getNodeValue();
+                    SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'");
+                    Date qdate = new GregorianCalendar(0, 0, 0).getTime();
+                    qdate = sdformat.parse(dt);
+                    
+                    String[] locationPair = point.split(" ");
+                    String location = "Lat: " + locationPair[0] + " Long: " + locationPair[1];
+                    
+                    String magnitudeString = details.split(" ")[1];
+                    double magnitude = Double.parseDouble(magnitudeString);
+                    
+                    details = details.split("-")[1].trim();
+                    
+                    QuakeConstructor quake = new QuakeConstructor(qdate, details, location, magnitude, linkString);
+                    
+                    quakes.add(quake);
                 }
             }
             
@@ -71,6 +94,8 @@ public class Main {
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SAXException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         
