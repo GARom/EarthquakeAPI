@@ -1,0 +1,1 @@
+Uses http://earthquake.usgs.gov API to find the magnitude of the earthquakes that occured today (will vary depending on user's date). The feed is taken using XML.
